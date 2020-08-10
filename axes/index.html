@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container"></div>
+    <script src="../node_modules/d3/dist/d3.min.js"></script>
+    <script>
+        const width = 600
+        const height = 600
+        const margin = 60
+
+        const barWidth = 20
+        const barMargin = 10
+
+        const svg = d3.select('.container').append("svg")
+
+        svg.attr("width", width)
+            .attr("height", height)
+
+        const chart = svg.append("g")
+                        .attr("class", "chart")
+                        .attr("transform", `translate(${margin},${margin})`)
+
+        const axesGroup = chart.append("g")
+                            .attr("class", "axes")
+
+        const bottomAxisGroup = axesGroup.append("g")
+                                    .attr("class", "bottom-axis")
+                                    .attr("transform", `translate(0,${height-margin*2})`)
+
+        const leftAxisGroup = axesGroup.append("g").attr("class", "left-axis")
+
+        async function render(){
+            let planetData = await d3.json('planets.json')
+            planetData = planetData.planets            
+
+            let xScale = d3.scaleLinear()
+                            .domain( [0, d3.max(planetData, item => item.surfaceTemperature)])
+                            .range([0, width- margin*2])
+
+            let bottomAxis = d3.axisBottom(xScale)
+
+            bottomAxis(bottomAxisGroup)
+
+            let yScale = d3.scaleBand()
+                            .domain(planetData.map(planet => planet.name))
+                            .range([0, height-margin*2])
+            
+            let leftAxis = d3.axisLeft(yScale)
+            leftAxis(leftAxisGroup)
+        }
+
+        render()
+
+
+
+        
+    </script>
+</body>
+</html>
