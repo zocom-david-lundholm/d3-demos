@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+
+    </div>
+    <script src="../node_modules/d3/dist/d3.min.js"></script>
+    <script>
+        const svg = d3.select('.container').append("svg")
+
+        svg.attr("width", 300).attr("height", 300)
+
+        const data = [5,4,20,10,14]
+            
+        const selection = svg.selectAll("circle").data(data)
+        selection.enter()
+            .append("circle")
+            .attr("cx", (num, index) => index * 30 + 30 )
+            .attr("cy", 150)
+            .attr("r", num => num)
+
+
+
+
+    </script>
+
+    <style>
+        svg{
+            border: 1px solid black;
+            margin: 5rem;
+        }
+    </style>
+    
+</body>
+</html>
