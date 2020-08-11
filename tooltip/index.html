@@ -71,8 +71,12 @@
 
         function renderTooltip(data){            
             const tooltip = document.querySelector(".tooltip")
-            tooltip.querySelector(".name").innerText = data.name
 
+            tooltip.querySelector(".name").innerText = "Name: " +data.name
+            tooltip.querySelector(".aphelion").innerText = "Aphelion: " + data.aphelion + "km"
+            tooltip.querySelector(".perihelion").innerText = "Perihelion: " + data.perihelion + "km"
+            tooltip.querySelector(".mass").innerText = "Mass: " + data.mass + "kg"
+            tooltip.querySelector(".volume").innerText = "Volume: " + data.volume + "km^3"
 
             tooltip.classList.add("show")
         }
@@ -127,17 +131,17 @@
                 .data(planetData)
 
             selection                
-                .attr("width", d => xScale(d[propertyName]))
+                .attr("width", item => xScale(item[propertyName]))
 
             selection
                 .enter()
                 .append("rect")
-                .attr("y", d => yScale(d.name) + barSize)
+                .attr("y", item => yScale(item.name) + barSize)
                 .attr("x", 0)
                 .attr("height", barSize)
-                .attr("width", d => xScale(d[propertyName]))
+                .attr("width", item => xScale(item[propertyName]))
                 .attr("fill", `rgb(200,50,50)`)
-                .on("mouseover", d => renderTooltip(d))
+                .on("mouseover", item => renderTooltip(item))
                 .on("mousemove", () => repositionTooltip(d3.event.clientX, d3.event.clientY))
                 .on("mouseleave", () => hideTooltip())
         }
