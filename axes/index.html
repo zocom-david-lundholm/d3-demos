@@ -9,56 +9,82 @@
     <div class="container"></div>
     <script src="../node_modules/d3/dist/d3.min.js"></script>
     <script>
+        // Setup config paramaters
         const width = 600
         const height = 600
         const margin = 60
+        const chartWidth = width - margin*2
+        const chartHeight = height - margin*2
 
-        const barWidth = 20
-        const barMargin = 10
+        // Create SVG
+        const svg = d3.select('.container')
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
 
-        const svg = d3.select('.container').append("svg")
-
-        svg.attr("width", width)
-            .attr("height", height)
-
+        // Create a Group for our chart
         const chart = svg.append("g")
                         .attr("class", "chart")
                         .attr("transform", `translate(${margin},${margin})`)
 
+        
+        // Create groups for our axes and gridlines
         const axesGroup = chart.append("g")
                             .attr("class", "axes")
 
+        const gridLinesGroup = axesGroup.append("g")
+                                    .attr("class", "grid-lines")
+
+        const horizontalGridLinesGroup = gridLinesGroup.append("g")
+                                    .attr("class", "horizontal-lines")
+                                    
+        // Create groups for vertical axes and translate them to the bottom
+        const verticalGridLinesGroup = gridLinesGroup.append("g")
+                                    .attr("class", "vertical-lines")
+                                    .attr("transform", `translate(0,${chartHeight})`)
+
         const bottomAxisGroup = axesGroup.append("g")
                                     .attr("class", "bottom-axis")
-                                    .attr("transform", `translate(0,${height-margin*2})`)
+                                    .attr("transform", `translate(0,${chartHeight})`)
 
         const leftAxisGroup = axesGroup.append("g").attr("class", "left-axis")
 
+        // Create an async function
         async function render(){
+            // Fetch the data
             let planetData = await d3.json('planets.json')
+            // Process data
             planetData = planetData.planets            
 
+            // Create the scales
             let xScale = d3.scaleLinear()
                             .domain( [0, d3.max(planetData, item => item.surfaceTemperature)])
-                            .range([0, width- margin*2])
-
-            let bottomAxis = d3.axisBottom(xScale)
-
-            bottomAxis(bottomAxisGroup)
-
+                            .range([0, chartWidth])
             let yScale = d3.scaleBand()
                             .domain(planetData.map(planet => planet.name))
-                            .range([0, height-margin*2])
-            
+                            .range([0, chartHeight])
+
+            // Create the main axes
+            let bottomAxis = d3.axisBottom(xScale)
+            bottomAxis(bottomAxisGroup)
+
             let leftAxis = d3.axisLeft(yScale)
             leftAxis(leftAxisGroup)
+            
+            // Create and configure grid lines
+            let verticalGridLines = d3.axisTop(xScale)                                
+                                .tickSize(chartHeight)
+                                .ticks(10)
+                                .tickSizeOuter(0)
+                                .tickFormat(()=>"")
+            verticalGridLinesGroup
+                .call(verticalGridLines)
+            gridLinesGroup.selectAll(".tick line")
+                                    .attr("stroke","lightgrey")
+
         }
-
-        render()
-
-
-
         
+        render()
     </script>
 </body>
 </html>

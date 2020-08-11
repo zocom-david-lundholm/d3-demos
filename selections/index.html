@@ -12,13 +12,13 @@
     </div>
     <script src="../node_modules/d3/dist/d3.min.js"></script>
     <script>        
-        let data = [5,4] 
+        let someData = [5,4] 
         function randomize(){
-            data = []
+            someData = []
             for(let i = 0; i < Math.floor(Math.random()*10); i++){
-                data.push(Math.floor(Math.random()*10))
+                someData.push(Math.floor(Math.random()*10))
             }
-            console.log(data);
+            console.log(someData);
         }
         
 
@@ -29,7 +29,7 @@
 
         
         function render(){
-            const selection = svg.selectAll("text").data(data)
+            const selection = svg.selectAll("text").data(someData)
 
             selection
                 .attr("x", (num, index) => index * 50 + 30 )
@@ -47,6 +47,26 @@
                 .remove()
 
         }
+
+        function render(){
+            const selection = svg.selectAll("text").data(data)
+
+            selection.join(
+                update => update.attr("x", (num, index) => index * 50 + 30 )
+                    .attr("fill", "green")
+                    .text(num => num),
+
+                enter => enter.append("text")
+                    .attr("x", (num, index) => index * 50 + 30 )
+                    .attr("y", 150)
+                    .attr("font-size", "2rem")
+                    .text(num => num),
+
+                exit => exit.remove()
+            )
+        }
+
+
         render()
             
 
